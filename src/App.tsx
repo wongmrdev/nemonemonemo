@@ -7,11 +7,31 @@ const client = generateClient<Schema>();
 function App() {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
   const { user, signOut } = useAuthenticator();
+  // const [couponsByName, setCouponsByName] = useState("");
+  // const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     client.models.Todo.observeQuery().subscribe({
       next: (data) => setTodos([...data.items]),
     });
   }, []);
+
+  // useEffect(() => {
+  //   const fetchCoupons = async () => {
+  //     try {
+  //       const response = await client.queries.getCouponsByName({
+  //         name: "Amplify",
+  //       });
+  //       setCouponsByName(response.data ? response.data : "No coupons found");
+  //     } catch (error) {
+  //       console.error("Error fetching coupons:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchCoupons();
+  // }, []);
 
   function createTodo() {
     client.models.Todo.create({ content: window.prompt("Todo content") });
@@ -21,8 +41,13 @@ function App() {
     client.models.Todo.delete({ id });
   }
 
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
+
   return (
     <main>
+      {/* <h1>{couponsByName}</h1> */}
       <h1>{user?.signInDetails?.loginId}'s todos</h1>
       <h1>My todos</h1>
       <button onClick={createTodo}>+ new</button>
